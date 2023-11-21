@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:wheather_app/services/location_provider.dart';
 import 'package:wheather_app/services/weather_service_provider.dart';
+import 'package:wheather_app/views/widgets/weather_data_row.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -32,9 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final weatherpro =
-        Provider.of<WeatherServiceProvider>(context, listen: false);
-
+    bool clicked = false;
     return Scaffold(
       body: Container(
         width: size.width,
@@ -46,9 +46,12 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.only(left: 40, right: 40, top: 80),
           child: Consumer2<LocationProvider, WeatherServiceProvider>(
             builder: (context, location, weather, child) {
-              String locationArea;
+              String? locationArea;
+
               if (location.currentLocationName == null) {
-                locationArea = 'Unknown';
+                weather.locationArea = 'Unknown';
+              } else if (clicked == true) {
+                locationArea = weather.locationArea!;
               } else {
                 locationArea = location.currentLocationName!.locality!;
               }
@@ -71,6 +74,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       IconButton(
                           onPressed: () {
                             weather.citySearch();
+                            clicked = true;
                           },
                           icon: const Icon(
                             Icons.search,
@@ -79,63 +83,58 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 50,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.location_pin,
                         color: Colors.red,
                         size: 30,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            locationArea,
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text(
-                            'Oct 10 2023 7:30 PM',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          )
-                        ],
+                      locationArea != null
+                          ? Text(
+                              locationArea,
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white),
+                            )
+                          : spinKit(),
+                      const SizedBox(
+                        height: 5,
                       )
                     ],
                   ),
                   const SizedBox(
-                    height: 50,
+                    height: 30,
                   ),
-                  Image.asset('assets/img/snow.png'),
+                  Image.asset('assets/img/clouds.png'),
                   const SizedBox(
                     height: 20,
                   ),
-                  Text(
-                    "${weatherpro.weather?.main?.temp.toString()} ° C",
-                    style: GoogleFonts.kanit(
-                        color: Colors.white,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    weatherpro.weather?.weather?[0].main.toString() ?? 'N/A',
-                    style: GoogleFonts.ubuntu(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
+                  weather.weather?.main?.temp != null
+                      ? Text(
+                          "${weather.weather!.main!.temp.toString()} ° C",
+                          style: GoogleFonts.kanit(
+                              color: Colors.white,
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold),
+                        )
+                      : spinKit(),
+                  weather.weather?.weather?[0].main != null
+                      ? Text(
+                          "${weather.weather!.weather![0].main.toString()} ",
+                          style: GoogleFonts.ubuntu(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        )
+                      : spinKit(),
                   Text(
                     DateFormat("hh:mm a").format(DateTime.now()),
                     style: const TextStyle(
@@ -146,60 +145,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(
                     height: 50,
                   ),
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/img/temperature-high.png',
-                        height: 60,
-                        width: 60,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Temp Max',
-                            style: GoogleFonts.kanit(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "${weatherpro.weather?.main?.tempMax} ° C",
-                            style: GoogleFonts.kanit(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      Image.asset(
-                        'assets/img/temperature-low.png',
-                        height: 60,
-                        width: 60,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Temp Min',
-                            style: GoogleFonts.kanit(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            "${weatherpro.weather?.main?.tempMin} ° C",
-                            style: GoogleFonts.kanit(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
+                  WeatherInfo(
+                    imgh1: 60,
+                    imgw1: 60,
+                    image: 'assets/img/temperature-high.png',
+                    text1: 'Temp Max',
+                    image2: 'assets/img/temperature-low.png',
+                    text2: 'Temp Min',
+                    gap: 30,
+                    data1: "${weather.weather?.main?.tempMax} ° C",
+                    data2: "${weather.weather?.main?.tempMin} ° C",
                   ),
                   const Divider(
                     color: Colors.white,
@@ -207,60 +162,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     indent: 15,
                     endIndent: 15,
                   ),
-                  Row(
-                    children: [
-                      Image.asset(
-                        'assets/img/sun.png',
-                        height: 60,
-                        width: 60,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Sunrise',
-                            style: GoogleFonts.kanit(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            '21 ° C',
-                            style: GoogleFonts.kanit(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        width: 60,
-                      ),
-                      Image.asset(
-                        'assets/img/moon.png',
-                        height: 50,
-                        width: 50,
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Moon',
-                            style: GoogleFonts.kanit(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            '04 ° C',
-                            style: GoogleFonts.kanit(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
+                  WeatherInfo(
+                    imgh1: 50,
+                    imgw1: 50,
+                    image: "assets/img/humidity.png",
+                    text1: 'Humidity',
+                    image2: 'assets/img/pressure.png',
+                    gap: 60,
+                    text2: 'Pressure',
+                    data1: weather.weather?.main?.humidity.toString(),
+                    data2: weather.weather?.main?.pressure.toString(),
                   ),
                 ],
               );
@@ -270,4 +181,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+SpinKitFadingFour spinKit() {
+  return const SpinKitFadingFour(
+    size: 20,
+    color: Colors.white,
+  );
 }

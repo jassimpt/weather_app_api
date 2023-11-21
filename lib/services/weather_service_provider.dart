@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:wheather_app/models/weather_model.dart';
 import 'package:wheather_app/secrets/api.dart';
@@ -7,6 +6,7 @@ import 'package:http/http.dart' as http;
 
 class WeatherServiceProvider extends ChangeNotifier {
   WeatherModel? weather;
+  String? locationArea;
   bool isloading = false;
   String error = '';
   TextEditingController citycontroller = TextEditingController();
@@ -32,6 +32,8 @@ class WeatherServiceProvider extends ChangeNotifier {
 
   citySearch() async {
     getWeatherByCity(citycontroller.text);
+    locationArea = citycontroller.text;
+
     notifyListeners();
   }
 }
