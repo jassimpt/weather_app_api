@@ -15,7 +15,9 @@ class WeatherServiceProvider extends ChangeNotifier {
     try {
       final cityurl =
           "${ApiEndPoints().cityurl}${city}&appid=${ApiEndPoints().key}${ApiEndPoints().unit}";
-      final response = await http.get(Uri.parse(cityurl));
+      final response = await http.get(
+        Uri.parse(cityurl),
+      );
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         print(data);

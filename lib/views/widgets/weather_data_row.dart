@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:wheather_app/views/screens/homescreen.dart';
 
 class WeatherInfo extends StatelessWidget {
   String image;
@@ -44,13 +45,15 @@ class WeatherInfo extends StatelessWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.bold),
             ),
-            Text(
-              data1!,
-              style: GoogleFonts.kanit(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            )
+            data1 != null
+                ? Text(
+                    data1!,
+                    style: GoogleFonts.kanit(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  )
+                : spinKit()
           ],
         ),
         SizedBox(
@@ -71,13 +74,15 @@ class WeatherInfo extends StatelessWidget {
                   fontSize: 18,
                   fontWeight: FontWeight.bold),
             ),
-            Text(
-              data2!,
-              style: GoogleFonts.kanit(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold),
-            )
+            data2 != null
+                ? Text(
+                    data2!,
+                    style: GoogleFonts.kanit(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  )
+                : spinKit()
           ],
         ),
       ],
