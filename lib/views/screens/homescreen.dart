@@ -149,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     WeatherInfo(
                       imgh1: 60,
-                      imgw1: 60,
+                      imgw1: 50,
                       image: 'assets/img/temperature-high.png',
                       text1: 'Temp Max',
                       image2: 'assets/img/temperature-low.png',
@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     WeatherInfo(
                       imgh1: 50,
-                      imgw1: 50,
+                      imgw1: 40,
                       image: "assets/img/humidity.png",
                       text1: 'Humidity',
                       image2: 'assets/img/pressure.png',

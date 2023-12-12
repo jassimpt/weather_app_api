@@ -22,7 +22,7 @@ class myapp extends StatelessWidget {
           create: (context) => WeatherServiceProvider(),
         )
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         debugShowCheckedModeBanner: false,
         home: HomeScreen(),
       ),
